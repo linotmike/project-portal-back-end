@@ -29,6 +29,11 @@ Profile.init(
         bestWorks: {
             type: DataTypes.STRING,
         },
+    },{
+        sequelize,
+        timestamps: false,
+        freezeTableName: true,
+        underscored: true,
     }
 );
 

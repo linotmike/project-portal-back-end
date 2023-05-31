@@ -26,6 +26,11 @@ Project.init(
         dueDate: {
             type: DataTypes.DATE,
         },
+    },{
+        sequelize,
+        timestamps: false,
+        freezeTableName: true,
+        underscored: true,
     }
 );    
 
