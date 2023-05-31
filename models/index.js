@@ -42,6 +42,26 @@ Project.belongsToMany(User, {
 
 // creates N:M association between User and Language
 
+User.belongsToMany(Language, {
+    through: "UserLanguage",
+    foreignKey: "user_id",
+});
+  
+Language.belongsToMany(User, {
+    through: "UserLanguage",
+    foreignKey: "language_id",
+});
 
+// creates N:M association between Project and Language
+
+Project.belongsToMany(Language, {
+    through: "ProjectLanguage",
+    foreignKey: "project_id",
+});
+  
+Language.belongsToMany(Project, {
+    through: "ProjectLanguage",
+    foreignKey: "language_id",
+});
 
 module.exports = { User, Profile, Project, Language };
