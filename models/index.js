@@ -2,6 +2,7 @@ const User = require('./User');
 const Profile = require('./Profile');
 const Project = require('./Project');
 const Language = require('./Language');
+const UserProject = require('./UserProject');
 
 // creates 1:1 association between User and Profile
 
@@ -29,13 +30,13 @@ Project.belongsTo(User, {
 // creates N:M association between User and Project, with User alias of 'Developer'
 
 User.belongsToMany(Project, {
-    through: "UserProject",
+    through: UserProject,
     foreignKey: "user_id",
     as: "Developer",
 });
   
 Project.belongsToMany(User, {
-    through: "UserProject",
+    through: UserProject,
     foreignKey: "project_id",
     as: "Developer",
 });
