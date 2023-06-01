@@ -1,6 +1,20 @@
 const router = require("express").Router();
 const { User, Profile } = require("../models");
 
+router.get("/", (req, res) => {
+    Profile.findAll()
+    .then(profileData => {
+        if(!profileData) {
+            return res.status(404).json({msg: "no such profiles"})
+        }
+
+        res.json(profileData);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({msg:"womp womp", err})
+    });
+});
+
 router.get("/:id", (req, res) => {
     Profile.findByPk(req.params.id)
     .then(profileData => {

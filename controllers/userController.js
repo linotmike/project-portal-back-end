@@ -4,9 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 router.get("/",(req,res)=>{
-    User.findAll({
-        include: Profile
-    }).then(users=>{
+    User.findAll().then(users=>{
         res.json(users)
     }).catch(err=>{
         console.log(err);
