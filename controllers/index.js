@@ -1,8 +1,12 @@
 const router = require("express").Router();
-const apiRoutes = require("./api");
-const homeRoutes = require("./homeRoutes.js");
 
-router.use("/api", apiRoutes);
-router.use("/", homeRoutes);
+const profileController = require("./profileController");
+const userController = require("./userController");
+const projectController = require('./projectController');
+
+router.use("/profiles", profileController);
+router.use("/signup", userController);
+router.use('/projects', projectController);
+
 
 module.exports = router;
