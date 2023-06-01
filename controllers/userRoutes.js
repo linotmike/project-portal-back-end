@@ -3,6 +3,19 @@ const { User, Profile } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+router.get("/",(req,res)=>{
+    User.findAll().then(users=>{
+        res.json(users)
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({
+            msg:"womp womp",
+            err
+        });
+    });
+});
+
+//  login
 router.post("/login", async (req, res) => {
     console.log(req.body);
     try {
@@ -34,30 +47,31 @@ router.post("/login", async (req, res) => {
     }
   });
 
+//   create new user
   router.post("/",(req,res)=>{
-    console.log
-    User.create({
+    console.log(req.body)
+        User.create({
         username:req.body.username,
         email:req.body.email,
         password:req.body.password
-    }).then(newser=>{
+    }).then(newUser=>{
         const token = jwt.sign({
-            username:newser.username,
-            userId:newser.id
+            username:newUser.username,
+            userId:newUser.id
         },process.env.JWT_SECRET,{
             expiresIn:"2h"
         })
         res.json({
             token,
-            user:newser
+            user:newUser
         })
     }).catch(err=>{
         console.log(err);
         res.status(500).json({
             msg:"womp womp",
             err
-        })
-    })
+        });
+    });
 });
 
 router.get("/verifytoken",(req,res)=>{
