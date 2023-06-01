@@ -5,7 +5,7 @@ const userController = require("./userController");
 const projectController = require('./projectController');
 
 router.use("/profiles", profileController);
-router.use("/signup", userController);
+router.use("/users", userController);
 router.use('/projects', projectController);
 
 
