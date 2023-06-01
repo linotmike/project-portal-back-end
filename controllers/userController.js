@@ -30,14 +30,14 @@ router.post("/login", async (req, res) => {
         } 
       else {
         const token = jwt.sign({
-            username:foundUser.username,
-            userId:foundUser.id
+            username:userData.username,
+            userId:userData.id
         },process.env.JWT_SECRET,{
             expiresIn:"2h"
         })
         res.json({
             token,
-            user:foundUser
+            user:userData
         })
     }
       
@@ -78,9 +78,7 @@ router.get("/verifytoken",(req,res)=>{
     const token = req.headers.authorization?.split(" ")[1];
     try {
         const data = jwt.verify(token,process.env.JWT_SECRET)
-        User.findByPk(data.userId,{
-            include:[Pallet]
-        }).then(foundUser=>{
+        User.findByPk(data.userId).then(foundUser=>{
             res.json(foundUser)
         })
     } catch (err) {
