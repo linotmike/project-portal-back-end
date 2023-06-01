@@ -32,6 +32,21 @@ router.get('/:name', async (req, res) => {
     }
 });
 
+// get open projects
+router.get('/status/open', async (req, res) => {
+    try {
+        const projectData = await Project.findAll({
+            where: {
+                status: true
+            },
+        });
+
+        res.json(projectData);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 // get project by language
 router.get('/:language', async (req, res) => {
     try {

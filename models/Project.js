@@ -23,6 +23,11 @@ Project.init(
         capacity: {
             type: DataTypes.INTEGER,
         },
+        status: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true, // true = open, false = closed
+        },
         dueDate: {
             type: DataTypes.DATE,
         },
