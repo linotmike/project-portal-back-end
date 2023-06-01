@@ -1,12 +1,12 @@
 const router = require("express").Router();
 
-const profileRoutes = require("./profileController");
-const userRoutes = require("./userController");
-const projectRoutes = require('./projectController');
+const profileController = require("./profileController");
+const userController = require("./userController");
+const projectController = require('./projectController');
 
-router.use("/profiles", profileRoutes);
-router.use("/signup", userRoutes);
-router.use('/projects', projectRoutes);
+router.use("/profiles", profileController);
+router.use("/signup", userController);
+router.use('/projects', projectController);
 
 
 module.exports = router;
