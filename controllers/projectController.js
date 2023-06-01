@@ -99,4 +99,25 @@ router.post('/:projectid/:userid', async (req, res) => {
     }
 });
 
+//update a project
+router.put('/:id', async (req, res) => {
+    const projectId = req.params.id;
+    const projectData = req.body;
+
+    try {
+        const project = Project.findByPk(projectId);
+
+        if(!project) {
+            return res.status(404).json({msg: "Project not found"});
+        }
+
+        await Project.update(projectData, {where: {id: projectId}});
+
+        res.json(project);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({msg: "Internal server error", err});
+    }
+});
+
 module.exports = router;
