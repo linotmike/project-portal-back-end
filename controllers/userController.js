@@ -17,6 +17,20 @@ router.get("/",(req,res)=>{
     });
 });
 
+router.get("/:id", (req, res) => {
+    User.findByPk(req.params.id)
+    .then(userData => {
+        if(!userData) {
+            return res.status(404).json({msg: "no such user"})
+        }
+
+        res.json(userData);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({msg:"womp womp", err})
+    });
+});
+
 //  login
 router.post("/login", async (req, res) => {
     console.log(req.body);
