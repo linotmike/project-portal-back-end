@@ -64,11 +64,8 @@ router.post("/login", async (req, res) => {
 //   create new user
   router.post("/",(req,res)=>{
     console.log(req.body)
-        User.create({
-        username:req.body.username,
-        email:req.body.email,
-        password:req.body.password
-    }).then(newUser=>{
+        User.create(req.body)
+        .then(newUser=>{
         const token = jwt.sign({
             username:newUser.username,
             userId:newUser.id
@@ -88,7 +85,7 @@ router.post("/login", async (req, res) => {
     });
 });
 
-router.get("/verifytoken",(req,res)=>{
+router.get("/verifytoken", async (req,res)=>{
     const token = req.headers.authorization?.split(" ")[1];
     try {
         const data = jwt.verify(token,process.env.JWT_SECRET)
@@ -100,5 +97,28 @@ router.get("/verifytoken",(req,res)=>{
         res.status(403).json({msg:"bad token",err})
     }
 });
+
+router.put("/:id", async (req,res)=>{
+    const userId = req.params.id;
+    const userData = req.body;
+    console.log(userData)
+
+    try {
+        const user = User.findByPk(userId);
+
+        if(!user) {
+            return res.status(404).json({msg: "user not found"});
+        }
+
+        await User.update(userData, {where:{id:userId}});
+
+        res.json(user);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({msg: "Internal server error", err});
+    }
+});
+
 
 module.exports = router;
