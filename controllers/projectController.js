@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // get project by name
-router.get('/:name', async (req, res) => {
+router.get('/name/:name', async (req, res) => {
     try {
         const projectData = await Project.findOne({
             where: {
@@ -48,7 +48,7 @@ router.get('/status/open', async (req, res) => {
 });
 
 // get project by language
-router.get('/:language', async (req, res) => {
+router.get('/language/:language', async (req, res) => {
     try {
         const projectData = await Project.findOne({
             where: {
