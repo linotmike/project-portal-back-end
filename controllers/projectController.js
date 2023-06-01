@@ -16,7 +16,15 @@ router.get('/', async (req, res) => {
 // get project by name
 router.get('/:name', async (req, res) => {
     try {
-        const projectData = await Project.findOne(req.params.name);
+        const projectData = await Project.findOne({
+            where: {
+                name: req.params.name
+            },
+        });
+
+        if(!projectData) {
+            return res.status(404).json({msg: "no such project"})
+        }
 
         res.status(200).json(projectData);
     } catch (err) {
@@ -27,7 +35,15 @@ router.get('/:name', async (req, res) => {
 // get project by language
 router.get('/:language', async (req, res) => {
     try {
-        const projectData = await Project.findOne(req.params.language);
+        const projectData = await Project.findOne({
+            where: {
+                language: req.params.language
+            },
+        });
+
+        if(!projectData) {
+            return res.status(404).json({msg: "no such project"})
+        }
 
         res.status(200).json(projectData);
     } catch (err) {
@@ -35,7 +51,7 @@ router.get('/:language', async (req, res) => {
     }
 });
 
-// add a project
+// create a project
 router.post('/', async (req, res) => {
     try {
         // adds project to table
@@ -46,6 +62,23 @@ router.post('/', async (req, res) => {
             user_id: req.body.user_id, // should use token to pass this in
             project_id: projectData.id,
         })
+
+        res.json(userProject);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// join a project
+router.post('/:projectid/:userid', async (req, res) => {
+    try {
+        // adds user to UserProject junction table
+        const userProject = await UserProject.create({
+            user_id: req.params.userid,
+            project_id: req.params.projectid,
+        })
+
+        res.json(userProject);
     } catch (err) {
         res.status(500).json(err);
     }
