@@ -3,6 +3,8 @@ const Profile = require('./Profile');
 const Project = require('./Project');
 const Language = require('./Language');
 const UserProject = require('./UserProject');
+const UserLanguage = require('./UserLanguage');
+const ProjectLanguage = require('./ProjectLanguage');
 
 // creates 1:1 association between User and Profile
 
@@ -44,25 +46,25 @@ Project.belongsToMany(User, {
 // creates N:M association between User and Language
 
 User.belongsToMany(Language, {
-    through: "UserLanguage",
+    through: UserLanguage,
     foreignKey: "user_id",
 });
   
 Language.belongsToMany(User, {
-    through: "UserLanguage",
+    through: UserLanguage,
     foreignKey: "language_id",
 });
 
 // creates N:M association between Project and Language
 
 Project.belongsToMany(Language, {
-    through: "ProjectLanguage",
+    through: ProjectLanguage,
     foreignKey: "project_id",
 });
   
 Language.belongsToMany(Project, {
-    through: "ProjectLanguage",
+    through: ProjectLanguage,
     foreignKey: "language_id",
 });
 
-module.exports = { User, Profile, Project, Language };
+module.exports = { User, Profile, Project, Language, UserProject, UserLanguage, ProjectLanguage };
