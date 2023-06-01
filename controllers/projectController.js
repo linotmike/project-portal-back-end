@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // get project by name
-router.get('/:name', async (req, res) => {
+router.get('/name/:name', async (req, res) => {
     try {
         const projectData = await Project.findOne({
             where: {
@@ -32,8 +32,23 @@ router.get('/:name', async (req, res) => {
     }
 });
 
+// get open projects
+router.get('/status/open', async (req, res) => {
+    try {
+        const projectData = await Project.findAll({
+            where: {
+                status: true
+            },
+        });
+
+        res.json(projectData);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 // get project by language
-router.get('/:language', async (req, res) => {
+router.get('/language/:language', async (req, res) => {
     try {
         const projectData = await Project.findOne({
             where: {
@@ -81,6 +96,27 @@ router.post('/:projectid/:userid', async (req, res) => {
         res.json(userProject);
     } catch (err) {
         res.status(500).json(err);
+    }
+});
+
+//update a project
+router.put('/:id', async (req, res) => {
+    const projectId = req.params.id;
+    const projectData = req.body;
+
+    try {
+        const project = Project.findByPk(projectId);
+
+        if(!project) {
+            return res.status(404).json({msg: "Project not found"});
+        }
+
+        await Project.update(projectData, {where: {id: projectId}});
+
+        res.json(project);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({msg: "Internal server error", err});
     }
 });
 
