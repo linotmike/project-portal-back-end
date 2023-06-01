@@ -1,17 +1,18 @@
 const router = require("express").Router();
 const { User, Profile } = require("../models");
 
-router.get("/:id", async (req, res) => {
-    console.log(req.params.id)
-    try {
-        const userData = await Profile.findByPk(req.params.id);
+router.get("/:id", (req, res) => {
+    Profile.findByPk(req.params.id)
+    .then(profileData => {
+        if(!profileData) {
+            return res.status(404).json({msg: "no such profile"})
+        }
 
-        const user = userData.map((user) => user.get({ plain: true }));
-
-        res.json(user);
-    } catch (err) {
-        res.status(500).json(err);
-      }
+        res.json(profileData);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({msg:"womp womp", err})
+    });
 });
 
 router.post("/",(req,res)=>{
@@ -35,21 +36,24 @@ router.post("/",(req,res)=>{
     }
 });
 
-router.put("/", (req,res)=>{
+router.put("/:id", async (req,res)=>{
+    const profileId = req.params.id;
+    const profileData = req.body;
+
     try {
-        Profile.update({
-            firstName:req.body.firstName,
-            lastName:req.body.lastName,
-            bio:req.body.bio,
-            picture:req.body.picture,
-            bestWorks:req.body.bestWorks,
-            user_id:req.body.user_id
-        }).then(updatedProfile=>{
-            res.json(updatedProfile)
-        })
-    } catch (err) {
+        const profile = Profile.findByPk(profileId);
+
+        if(!profile) {
+            return res.status(404).json({msg: "Profile not found"});
+        }
+
+        await Profile.update(profileData, {where:{id:profileId}});
+
+        res.json(profile);
+    }
+    catch (err) {
         console.log(err);
-        res.status(403).json({msg:"bad token",err})
+        res.status(500).json({msg: "Internal server error", err});
     }
 });
 
