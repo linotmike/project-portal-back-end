@@ -1,16 +1,13 @@
 const express = require('express');
 const allRoutes = require('./controllers');
 const sequelize = require('./config/connection');
-const cors = require("cors")
-
+const http = require("http");
+const { Server } = require("socket.io")
+const cors = require("cors");
 
 // Sets up the Express App
-
 const app = express();
-const PORT = process.env.PORT || 3000;
-// Requiring our models for syncing
-const { User } = require('./models');
-
+const PORT = process.env.PORT || 3001;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -18,6 +15,14 @@ app.use(express.json());
 app.use(cors())
 app.use('/',allRoutes);
 
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    },
+});
 
 sequelize.sync({ force: false }).then(function() {
     app.listen(PORT, function() {
