@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Project, UserProject, User } = require('../models');
+const { Project, Language, UserProject, User } = require('../models');
 const jwt = require('jsonwebtoken');
 
 // get all projects
@@ -47,16 +47,21 @@ router.get('/status/open', async (req, res) => {
     }
 });
 
-// get project by language
+// get projects by language
 router.get('/language/:language', async (req, res) => {
     try {
-        const projectData = await Project.findOne({
-            where: {
-                language: req.params.language
-            },
+        const projectData = await Project.findAll({
+            include: [
+                {
+                    model: Language,
+                    where: {
+                        name: req.params.language,
+                    }
+                }
+            ]
         });
 
-        if(!projectData) {
+        if(!projectData || projectData.length === 0) {
             return res.status(404).json({msg: "no such project"})
         }
 
