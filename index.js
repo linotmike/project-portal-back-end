@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 app.use('/',allRoutes);
 
 const server = http.createServer(app);
@@ -24,8 +24,16 @@ const io = new Server(server, {
     },
 });
 
+io.on("connection", (socket) => {
+    console.log(`User Connected: ${socket.id}`)
+
+    socket.on("send_message", (data) => {
+        socket.broadcast.emit("receive_message", data)
+    })
+})
+
 sequelize.sync({ force: false }).then(function() {
-    app.listen(PORT, function() {
+    server.listen(PORT, function() {
     console.log('App listening on PORT ' + PORT);
     });
 });
