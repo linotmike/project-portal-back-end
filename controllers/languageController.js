@@ -41,52 +41,76 @@ router.post('/', (req, res) => {
     })
 });
 
-// add a language to associated user
-// params:
-// ':name' - language name
-// ':userid' - user id
-router.post('/:name/user', async (req, res) => {
+// add languages to associated user
+// req.body is an array of languages
+router.post('/user/:userid', async (req, res) => {
     try {
-        const language = await Language.findOne({
-            where: {
-                name: req.params.name
-            },
-        })
+        // loop through each language, check if it's a duplicate
+        // if duplicate, don't add, else add to table
+        for(let i = 0; i < req.body.length; i++) {
+            const languageName = req.body[i].name.trim();
+            
+            let language = await Language.findOne({ where: { name: languageName } });
 
-        if(!language) {
-            return res.status(404).json({msg: "no such language"})
+            // check if language already exists in Language table
+            if(!language) {
+                // add to table if doesn't exist
+                language = await Language.create({
+                    name: languageName
+                });
+            }
+
+            const userLanguage = await UserLanguage.findOne({ where: { user_id: req.params.userid, language_id: language.id } });
+
+            // check if user is already associated with this language
+            if(!userLanguage) {
+                // add language to junction table
+                await UserLanguage.create({
+                    user_id: req.params.userid,
+                    language_id: language.id, 
+                });
+            }
         }
 
-        const userLanguageData = await UserLanguage.create({
-            user_id: req.body.user_id,
-            language_id: language.id,
-        })
-
-        res.json(userLanguageData);
+        res.json({msg: "Success!"});
     } catch (err) {
         console.log(err);
         res.status(500).json({msg:"internal server error", err});
     }
 });
 
-router.post('/:name/project', async (req, res) => {
+// add languages to associated project
+// req.body is an array of languages
+router.post('/project/:projectid', async (req, res) => {
     try {
-        const language = await Language.findOne({
-            where: {
-                name: req.params.name
-            },
-        })
+        // loop through each language, check if it's a duplicate
+        // if duplicate, don't add, else add to table
+        for(let i = 0; i < req.body.length; i++) {
+            const languageName = req.body[i].name.trim();
+            
+            let language = await Language.findOne({ where: { name: languageName } });
 
-        if(!language) {
-            return res.status(404).json({msg: "no such language"})
+            // check if language already exists in Language table
+            if(!language) {
+                // add to table if doesn't exist
+                language = await Language.create({
+                    name: languageName
+                });
+            }
+
+            const projectLanguage = await ProjectLanguage.findOne({ where: { project_id: req.params.projectid, language_id: language.id } });
+
+            // check if project is already associated with this language
+            if(!projectLanguage) {
+                // add language to junction table
+                await ProjectLanguage.create({
+                    project_id: req.params.projectid,
+                    language_id: language.id, 
+                });
+            }
         }
 
-        const projectLanguageData = await ProjectLanguage.create({
-            project_id: req.body.project_id,
-            language_id: language.id,
-        })
-
-        res.json(projectLanguageData);
+        res.json({msg: "Success!"});
     } catch (err) {
         console.log(err);
         res.status(500).json({msg:"internal server error", err});
