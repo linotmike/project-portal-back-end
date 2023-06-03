@@ -77,13 +77,7 @@ router.post('/', async (req, res) => {
         // adds project to table
         const projectData = await Project.create(req.body);
 
-        // adds project and signed in user to UserProject junction table
-        const userProject = await UserProject.create({
-            user_id: req.body.user_id, // should use token to pass this in
-            project_id: projectData.id,
-        })
-
-        res.json(userProject);
+        res.json(projectData);
     } catch (err) {
         res.status(500).json(err);
     }
