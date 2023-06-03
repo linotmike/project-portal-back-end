@@ -156,6 +156,7 @@ router.post('/:projectid/:userid', async (req, res) => {
         else {
             const numDevelopers = project.Developer.length;
 
+            // + 1 is to include the owner
             if(numDevelopers + 1 >= project.capacity) {
                 return res.status(404).json({msg: "project has reached max capacity"});
             }
@@ -201,8 +202,9 @@ router.put('/:id', async (req, res) => {
         else {
             const numDevelopers = project.Developer.length;
 
+            // + 1 is to include the owner
             if(numDevelopers + 1 > req.body.capacity) {
-                return res.status(404).json({msg: "Project capacity can't be less than"});
+                return res.status(404).json({msg: "Project capacity can't be less than number of developers"});
             }
         }
 
