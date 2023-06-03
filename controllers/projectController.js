@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 // get all projects
 router.get('/', async (req, res) => {
     try {
-        const projectData = await Project.findAll();
+        const projectData = await Project.findAll({
+            include: [ Language ]
+        });
 
         res.status(200).json(projectData);
     } catch (err) {
@@ -83,7 +85,7 @@ router.post('/', async (req, res) => {
             project_id: projectData.id,
         })
 
-        res.json(userProject);
+        res.json({projectData, userProject});
     } catch (err) {
         res.status(500).json(err);
     }
