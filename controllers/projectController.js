@@ -134,6 +134,33 @@ router.post('/', async (req, res) => {
 // join a project
 router.post('/:projectid/:userid', async (req, res) => {
     try {
+        const project = await Project.findByPk(req.params.projectid, {
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
+
+        if(!project) {
+            return res.status(404).json({msg: "no such project"});
+        }
+        else {
+            const numDevelopers = project.Developer.length;
+
+            if(numDevelopers + 1 >= project.capacity) {
+                return res.status(404).json({msg: "project has reached max capacity"});
+            }
+        }
+
         // adds user to UserProject junction table
         const userProject = await UserProject.create({
             user_id: req.params.userid,
