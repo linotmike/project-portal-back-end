@@ -1,10 +1,28 @@
 const router = require("express").Router();
-const { User, Profile } = require("../models");
+const { User, Profile, Project, Language } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 router.get("/",(req,res)=>{
-    User.findAll().then(users=>{
+    User.findAll({
+        include: [
+            {
+                model: Profile,
+            },
+            {
+                model: Project,
+                as: 'Owner',
+            },
+            {
+                model: Project,
+                as: 'Developer',
+            },
+            {
+                model: Language,
+                as: 'Languages',
+            },
+        ],
+    }).then(users=>{
         res.json(users)
     }).catch(err=>{
         console.log(err);
@@ -16,7 +34,25 @@ router.get("/",(req,res)=>{
 });
 
 router.get("/:id", (req, res) => {
-    User.findByPk(req.params.id)
+    User.findByPk(req.params.id, {
+        include: [
+            {
+                model: Profile,
+            },
+            {
+                model: Project,
+                as: 'Owner',
+            },
+            {
+                model: Project,
+                as: 'Developer',
+            },
+            {
+                model: Language,
+                as: 'Languages',
+            },
+        ],
+    })
     .then(userData => {
         if(!userData) {
             return res.status(404).json({msg: "no such user"})
@@ -89,7 +125,25 @@ router.get("/auth/verifytoken",(req,res)=>{
     const token = req.headers.authorization?.split(" ")[1];
     try {
         const data = jwt.verify(token,process.env.JWT_SECRET)
-        User.findByPk(data.userId).then(foundUser=>{
+        User.findByPk(data.userId, {
+            include: [
+                {
+                    model: Profile,
+                },
+                {
+                    model: Project,
+                    as: 'Owner',
+                },
+                {
+                    model: Project,
+                    as: 'Developer',
+                },
+                {
+                    model: Language,
+                    as: 'Languages',
+                },
+            ],
+        }).then(foundUser=>{
             res.json(foundUser)
         })
     } catch (err) {
