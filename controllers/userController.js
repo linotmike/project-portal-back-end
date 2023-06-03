@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { User, Profile, Project } = require("../models");
+const { User, Profile, Project, Language } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -16,6 +16,10 @@ router.get("/",(req,res)=>{
             {
                 model: Project,
                 as: 'Developer',
+            },
+            {
+                model: Language,
+                as: 'Languages',
             },
         ],
     }).then(users=>{
@@ -42,6 +46,10 @@ router.get("/:id", (req, res) => {
             {
                 model: Project,
                 as: 'Developer',
+            },
+            {
+                model: Language,
+                as: 'Languages',
             },
         ],
     })
@@ -129,6 +137,10 @@ router.get("/auth/verifytoken",(req,res)=>{
                 {
                     model: Project,
                     as: 'Developer',
+                },
+                {
+                    model: Language,
+                    as: 'Languages',
                 },
             ],
         }).then(foundUser=>{
