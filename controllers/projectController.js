@@ -5,7 +5,21 @@ const jwt = require('jsonwebtoken');
 // get all projects
 router.get('/', async (req, res) => {
     try {
-        const projectData = await Project.findAll();
+        const projectData = await Project.findAll({
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
 
         res.status(200).json(projectData);
     } catch (err) {
@@ -20,6 +34,19 @@ router.get('/name/:name', async (req, res) => {
             where: {
                 name: req.params.name
             },
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
         });
 
         if(!projectData) {
@@ -39,6 +66,19 @@ router.get('/status/open', async (req, res) => {
             where: {
                 status: true
             },
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
         });
 
         res.json(projectData);
@@ -56,8 +96,16 @@ router.get('/language/:language', async (req, res) => {
                     model: Language,
                     where: {
                         name: req.params.language,
-                    }
-                }
+                    },
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
             ]
         });
 
@@ -77,13 +125,7 @@ router.post('/', async (req, res) => {
         // adds project to table
         const projectData = await Project.create(req.body);
 
-        // adds project and signed in user to UserProject junction table
-        const userProject = await UserProject.create({
-            user_id: req.body.user_id, // should use token to pass this in
-            project_id: projectData.id,
-        })
-
-        res.json(userProject);
+        res.json(projectData);
     } catch (err) {
         res.status(500).json(err);
     }
@@ -92,6 +134,34 @@ router.post('/', async (req, res) => {
 // join a project
 router.post('/:projectid/:userid', async (req, res) => {
     try {
+        const project = await Project.findByPk(req.params.projectid, {
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
+
+        if(!project) {
+            return res.status(404).json({msg: "no such project"});
+        }
+        else {
+            const numDevelopers = project.Developer.length;
+
+            // + 1 is to include the owner
+            if(numDevelopers + 1 >= project.capacity) {
+                return res.status(404).json({msg: "project has reached max capacity"});
+            }
+        }
+
         // adds user to UserProject junction table
         const userProject = await UserProject.create({
             user_id: req.params.userid,
@@ -110,10 +180,32 @@ router.put('/:id', async (req, res) => {
     const projectData = req.body;
 
     try {
-        const project = Project.findByPk(projectId);
+        const project = await Project.findByPk(projectId, {
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
 
         if(!project) {
             return res.status(404).json({msg: "Project not found"});
+        }
+        else {
+            const numDevelopers = project.Developer.length;
+
+            // + 1 is to include the owner
+            if(numDevelopers + 1 > req.body.capacity) {
+                return res.status(404).json({msg: "Project capacity can't be less than number of developers"});
+            }
         }
 
         await Project.update(projectData, {where: {id: projectId}});
