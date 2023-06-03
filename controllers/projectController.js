@@ -179,10 +179,31 @@ router.put('/:id', async (req, res) => {
     const projectData = req.body;
 
     try {
-        const project = Project.findByPk(projectId);
+        const project = await Project.findByPk(projectId, {
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
 
         if(!project) {
             return res.status(404).json({msg: "Project not found"});
+        }
+        else {
+            const numDevelopers = project.Developer.length;
+
+            if(numDevelopers + 1 > req.body.capacity) {
+                return res.status(404).json({msg: "Project capacity can't be less than"});
+            }
         }
 
         await Project.update(projectData, {where: {id: projectId}});
