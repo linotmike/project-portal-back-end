@@ -5,7 +5,21 @@ const jwt = require('jsonwebtoken');
 // get all projects
 router.get('/', async (req, res) => {
     try {
-        const projectData = await Project.findAll();
+        const projectData = await Project.findAll({
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
 
         res.status(200).json(projectData);
     } catch (err) {
@@ -20,6 +34,19 @@ router.get('/name/:name', async (req, res) => {
             where: {
                 name: req.params.name
             },
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
         });
 
         if(!projectData) {
@@ -39,6 +66,19 @@ router.get('/status/open', async (req, res) => {
             where: {
                 status: true
             },
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
         });
 
         res.json(projectData);
@@ -56,8 +96,16 @@ router.get('/language/:language', async (req, res) => {
                     model: Language,
                     where: {
                         name: req.params.language,
-                    }
-                }
+                    },
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
             ]
         });
 
