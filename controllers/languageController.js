@@ -85,8 +85,8 @@ router.post('/project/:projectid', async (req, res) => {
     try {
         // loop through each language, check if it's a duplicate
         // if duplicate, don't add, else add to table
-        for(let i = 0; i < req.body.length; i++) {
-            const languageName = req.body[i].name.trim();
+        for(let i = 0; i < req.body.array.length; i++) {
+            const languageName = req.body.array[i].trim().toUpperCase();
             
             let language = await Language.findOne({ where: { name: languageName } });
 
