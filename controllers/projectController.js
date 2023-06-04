@@ -27,6 +27,39 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Get project by ID 
+router.get('/:id', async (req, res) => {
+    try {
+        const projectData = await Project.findOne({
+            where: {
+                id: req.params.id
+            },
+            include: [
+                {
+                    model: Language,
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                },
+                {
+                    model: User,
+                    as: 'Developer',
+                },
+            ],
+        });
+
+        if(!projectData) {
+            return res.status(404).json({msg: "no such project"})
+        }
+
+        res.status(200).json(projectData);
+    } catch (error) {
+        console.log(error);
+        res.json(500).json({ msg: "Error loading project", error })
+    }
+})
+
 // get projects by user
 router.get('/user/:userid', async (req, res) => {
     try {
