@@ -27,6 +27,35 @@ router.get('/', async (req, res) => {
     }
 });
 
+// get projects by user
+router.get('/user/:userid', async (req, res) => {
+    try {
+        const projectData = await User.findByPk(req.params.userid, {
+            include: [
+                {
+                    model: Project,
+                    as: 'Owner',
+                },
+                {
+                    model: Project,
+                    as: 'Developer',
+                },
+            ],
+        });
+
+        // combines projects user owns with those they are a developer on
+        const allProjects = [...projectData.Owner, ...projectData.Developer];
+
+        if(!allProjects || allProjects.length === 0) {
+            return res.status(404).json({msg: "no such project"})
+        }
+
+        res.status(200).json(allProjects);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 // get project by name
 router.get('/name/:name', async (req, res) => {
     try {
@@ -125,13 +154,7 @@ router.post('/', async (req, res) => {
         // adds project to table
         const projectData = await Project.create(req.body);
 
-        // adds project and signed in user to UserProject junction table
-        const userProject = await UserProject.create({
-            user_id: req.body.user_id, // should use token to pass this in
-            project_id: projectData.id,
-        })
-
-        res.json({projectData, userProject});
+        res.json(projectData);
     } catch (err) {
         res.status(500).json(err);
     }
