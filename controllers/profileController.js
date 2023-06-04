@@ -61,7 +61,17 @@ router.put("/:id", async (req,res)=>{
             return res.status(404).json({msg: "Profile not found"});
         }
 
-        await Profile.update(profileData, {where:{id:profileId}});
+        await Profile.update(
+            {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                bio: req.body.bio,
+                picture: req.body.picture,
+                bestWorks: req.body.bestWorks
+            },
+            {
+                where: {user_id:profileId}
+            });
 
         res.json(profile);
     }
