@@ -68,10 +68,12 @@ router.get('/user/:userid', async (req, res) => {
                 {
                     model: Project,
                     as: 'Owner',
+                    include: [Language],
                 },
                 {
                     model: Project,
                     as: 'Developer',
+                    include: [Language],
                 },
             ],
         });
