@@ -1,6 +1,7 @@
 const User = require('./User');
 const Profile = require('./Profile');
 const Project = require('./Project');
+const Message = require('./Message');
 const Language = require('./Language');
 const UserProject = require('./UserProject');
 const UserLanguage = require('./UserLanguage');
@@ -16,6 +17,28 @@ User.hasOne(Profile, {
 Profile.belongsTo(User, {
     foreignKey: 'user_id',
 });
+
+// creates M:1 association between Messages and Users
+
+User.hasMany(Message, {
+    onDelete: 'CASCADE',
+    foreignKey: 'message_id'
+});
+
+Message.belongsTo(User, {
+    foreignKey: 'message_id'
+})
+
+// creates M:1 association between Messages and Projects
+
+Project.hasMany(Message, {
+    onDelete: 'CASCADE',
+    foreignKey: 'message_id'
+})
+
+Message.belongsTo(Project, {
+    foreignKey: 'message_id'
+})
 
 // creates 1:N association between User and Project, with User alias of 'Owner'
 
