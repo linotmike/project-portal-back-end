@@ -36,7 +36,7 @@ Project.hasMany(Message, {
     foreignKey: 'project_id'
 })
 
-Message.belongsToM(Project, {
+Message.belongsTo(Project, {
     foreignKey: 'project_id'
 })
 
@@ -90,4 +90,4 @@ Language.belongsToMany(Project, {
     foreignKey: "language_id",
 });
 
-module.exports = { User, Profile, Project, Language, UserProject, UserLanguage, ProjectLanguage };
+module.exports = { User, Profile, Project, Language, UserProject, UserLanguage, ProjectLanguage, Message };
