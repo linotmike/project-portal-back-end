@@ -7,7 +7,12 @@ router.get('/:projectid', async (req, res) => {
             {order:[["createdAt", "ASC"]],
              where: {
                 project_id: req.params.projectid
-            }
+            },
+            include: [
+                {
+                    model: User,
+                },
+            ],
     });
 
         res.json(message);
