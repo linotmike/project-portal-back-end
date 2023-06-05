@@ -22,22 +22,22 @@ Profile.belongsTo(User, {
 
 User.hasMany(Message, {
     onDelete: 'CASCADE',
-    foreignKey: 'message_id'
+    foreignKey: 'user_id'
 });
 
 Message.belongsTo(User, {
-    foreignKey: 'message_id'
+    foreignKey: 'user_id'
 })
 
 // creates M:1 association between Messages and Projects
 
 Project.hasMany(Message, {
     onDelete: 'CASCADE',
-    foreignKey: 'message_id'
+    foreignKey: 'project_id'
 })
 
-Message.belongsTo(Project, {
-    foreignKey: 'message_id'
+Message.belongsToM(Project, {
+    foreignKey: 'project_id'
 })
 
 // creates 1:N association between User and Project, with User alias of 'Owner'
