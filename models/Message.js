@@ -25,10 +25,9 @@ Message.init(
         text: {
             type: DataTypes.TEXT,
             allowNull: false
-        }
+        },
     },{
         sequelize,
-        timestamps: false,
         freezeTableName: true,
         underscored: true,
     }

@@ -90,4 +90,4 @@ Language.belongsToMany(Project, {
     foreignKey: "language_id",
 });
 
-module.exports = { User, Profile, Project, Language, UserProject, UserLanguage, ProjectLanguage };
+module.exports = { User, Profile, Project, Language, UserProject, UserLanguage, ProjectLanguage, Message };
