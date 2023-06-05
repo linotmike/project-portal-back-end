@@ -3,16 +3,12 @@ const { Message, User, Project } = require("../models");
 
 router.get('/:projectid', async (req, res) => {
     try {
-        const message = await Message.findByPk(req.params.projectid, {
-            include: [
-                {
-                    model: User,
-                },
-                {
-                    model: Project,
-                },
-            ],
-        });
+        const message = await Message.findAll(
+            {order:[["createdAt", "ASC"]],
+             where: {
+                project_id: req.params.projectid
+            }
+    });
 
         res.json(message);
     } catch (err) {
