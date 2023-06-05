@@ -9,10 +9,18 @@ Message.init(
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+                model: 'User',
+                key: 'id',
+            },
         },
         project_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+                model: 'Project',
+                key: 'id',
+            },
         },
         text: {
             type: DataTypes.TEXT,
