@@ -94,7 +94,7 @@ router.get('/user/:userid', async (req, res) => {
 // get project by name
 router.get('/name/:name', async (req, res) => {
     try {
-        const projectData = await Project.findOne({
+        const projectData = await Project.findAll({
             where: {
                 name: req.params.name
             },
