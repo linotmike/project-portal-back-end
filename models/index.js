@@ -36,7 +36,7 @@ Project.hasMany(Message, {
     foreignKey: 'project_id'
 })
 
-Message.belongsToM(Project, {
+Message.belongsTo(Project, {
     foreignKey: 'project_id'
 })
 
