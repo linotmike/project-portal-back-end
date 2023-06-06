@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Message, User, Project } = require("../models");
+const { Message, User, Profile } = require("../models");
 
 router.get('/:projectid', async (req, res) => {
     try {
@@ -11,6 +11,7 @@ router.get('/:projectid', async (req, res) => {
             include: [
                 {
                     model: User,
+                    include: [Profile],
                 },
             ],
     });

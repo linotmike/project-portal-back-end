@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { Project, Language, UserProject, User } = require('../models');
-const jwt = require('jsonwebtoken');
 
 // get all projects
 router.get('/', async (req, res) => {
