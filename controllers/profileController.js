@@ -51,17 +51,21 @@ router.post("/",(req,res)=>{
 });
 
 router.put("/:id", async (req,res)=>{
-    const profileId = req.params.id;
+    const userId = req.params.id;
     const profileData = req.body;
 
     try {
-        const profile = Profile.findByPk(profileId);
+        const profile = Profile.findOne({
+            where: {
+                user_id: userId
+            }
+        });
 
         if(!profile) {
             return res.status(404).json({msg: "Profile not found"});
         }
 
-        await Profile.update(
+        const updatedProfile = await Profile.update(
             {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -70,10 +74,10 @@ router.put("/:id", async (req,res)=>{
                 bestWorks: req.body.bestWorks
             },
             {
-                where: {user_id:profileId}
+                where: {user_id:userId}
             });
 
-        res.json(profile);
+        return res.json(updatedProfile);
     }
     catch (err) {
         console.log(err);
