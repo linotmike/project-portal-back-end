@@ -4,7 +4,7 @@ const profileController = require("./profileController");
 const userController = require("./userController");
 const projectController = require('./projectController');
 const languageController = require('./languageController');
-const messageController = require('./messageRoute');
+const messageController = require('./messageController');
 
 router.use("/profiles", profileController);
 router.use("/users", userController);
