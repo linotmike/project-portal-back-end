@@ -33,8 +33,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("send_message", (data) => {
-        console.log(socket.rooms)
-        socket.to(data.room).emit("receive_message", data);
+        console.log(data)
+        io.to(data.room).emit("receive_message", data.msgObj);
     });
 });
 
