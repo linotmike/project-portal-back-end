@@ -22,7 +22,7 @@ router.get('/:projectid', async (req, res) => {
             messageObj.push({
                 user_id: messages[i].user_id,
                 username: messages[i].User.username,
-                // picture: messages[i].Profile.picture,
+                picture: messages[i].User.Profile.picture,
                 createdAt: messages[i].createdAt,
                 project_id: messages[i].project_id,
                 text: messages[i].text,
