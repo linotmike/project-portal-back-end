@@ -3,8 +3,8 @@ const { Message, User, Profile } = require("../models");
 
 router.get('/:projectid', async (req, res) => {
     try {
-        const message = await Message.findAll(
-            {order:[["createdAt", "ASC"]],
+        const messages = await Message.findAll({
+            order:[["createdAt", "ASC"]],
              where: {
                 project_id: req.params.projectid
             },
@@ -14,9 +14,22 @@ router.get('/:projectid', async (req, res) => {
                     include: [Profile],
                 },
             ],
-    });
+        });
 
-        res.json(message);
+        const messageObj = [];
+
+        for(let i = 0; i < messages.length; i++) {
+            messageObj.push({
+                user_id: messages[i].user_id,
+                username: messages[i].User.username,
+                // picture: messages[i].Profile.picture,
+                createdAt: messages[i].createdAt,
+                project_id: messages[i].project_id,
+                text: messages[i].text,
+            });
+        }
+
+        res.json(messageObj);
     } catch (err) {
         res.status(500).json(err);
     }
