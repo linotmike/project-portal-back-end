@@ -280,4 +280,17 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+// delete a project
+router.delete('/:projectid', async (req, res) => {
+    const projectId = req.params.projectid
+
+    try {
+        await Project.destroy({where: {id: projectId}})
+        return res.status(200).json({msg: "success"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: "Internal server error", error});
+    }
+})
+
 module.exports = router;
