@@ -1,6 +1,6 @@
 [
 	{
-		"origin": ["http://localhost:3000","https://proj-portal.netlify.app"],
+		"origin": ["http://localhost:3000","http://proj-portal.netlify.app","https://proj-portal.netlify.app"],
 		"method": ["GET", "POST", "PUT", "DELETE"],
 		"responseHeader": ["Content-Type"],
 		"maxAgeSeconds": 3600
