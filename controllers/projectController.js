@@ -81,7 +81,8 @@ router.get('/user/:userid', async (req, res) => {
         const allProjects = [...projectData.Owner, ...projectData.Developer];
 
         if(!allProjects || allProjects.length === 0) {
-            return res.status(404).json({msg: "no such project"})
+            return res.json([]);
+            //return res.status(404).json({msg: "no such project"})
         }
 
         res.status(200).json(allProjects);
