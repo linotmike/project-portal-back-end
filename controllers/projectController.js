@@ -81,7 +81,8 @@ router.get('/user/:userid', async (req, res) => {
         const allProjects = [...projectData.Owner, ...projectData.Developer];
 
         if(!allProjects || allProjects.length === 0) {
-            return res.status(404).json({msg: "no such project"})
+            return res.json([]);
+            //return res.status(404).json({msg: "no such project"})
         }
 
         res.status(200).json(allProjects);
@@ -279,5 +280,18 @@ router.put('/:id', async (req, res) => {
         res.status(500).json({msg: "Internal server error", err});
     }
 });
+
+// delete a project
+router.delete('/:projectid', async (req, res) => {
+    const projectId = req.params.projectid
+
+    try {
+        await Project.destroy({where: {id: projectId}})
+        return res.status(200).json({msg: "success"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: "Internal server error", error});
+    }
+})
 
 module.exports = router;
